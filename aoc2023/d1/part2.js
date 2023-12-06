@@ -3,6 +3,7 @@ import input from "./input.js"
 const elementsArray = input.trim().split('\n')
 
 const spelledOutDigits = {
+  zero: 0,
   one: 1,
   two: 2,
   three: 3,
@@ -13,7 +14,6 @@ const spelledOutDigits = {
   eight: 8,
   nine: 9
 }
-console.log(spelledOutDigits)
 
 let totalCalibrationValue = 0
 
@@ -34,9 +34,9 @@ elementsArray.forEach(element => {
   const digitMatches = findAllMatches(element, new RegExp(`(\\d|${Object.keys(spelledOutDigits).join("|")})`, "gi"))
 
   if (digitMatches && digitMatches.length >= 2) {
-    const firstDigit = spelledOutDigits[digitMatches[0].toLowerCase()] || parseInt(digitMatches[0])
+    const firstDigit = spelledOutDigits[digitMatches[0]] || parseInt(digitMatches[0])
 
-    const lastDigit = spelledOutDigits[digitMatches[digitMatches.length - 1].toLowerCase()] || parseInt(digitMatches[digitMatches.length - 1])
+    const lastDigit = spelledOutDigits[digitMatches[digitMatches.length - 1]] || parseInt(digitMatches[digitMatches.length - 1])
 
 
     const calibrationValue = firstDigit * 10 + lastDigit
