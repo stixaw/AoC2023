@@ -30,10 +30,9 @@ function findAllMatches(string, regex) {
 }
 
 elementsArray.forEach(element => {
-
   const digitMatches = findAllMatches(element, new RegExp(`(\\d|${Object.keys(spelledOutDigits).join("|")})`, "gi"))
 
-  if (digitMatches && digitMatches.length >= 2) {
+  if (digitMatches.length) {
     const firstDigit = spelledOutDigits[digitMatches[0]] || parseInt(digitMatches[0])
 
     const lastDigit = spelledOutDigits[digitMatches[digitMatches.length - 1]] || parseInt(digitMatches[digitMatches.length - 1])
