@@ -1,4 +1,6 @@
-import input from "./example1.js"
+import input from "./input.js"
+
+const games = input.split("\n")
 
 /** add up the numbers of the games that would have been possible, you get 8.  for exxample1.js
  * each line is a game with multiple rounds
@@ -13,28 +15,26 @@ const validCubeCount = {
 
 let validGamesSum = 0
 
-function isGamePossible(line) {
-  const subgames = line.split(":")[1].split(";");
+function isGamePossible(game) {
+  const subgames = game.split(":")[1].split(";")
   for (let subgame of subgames) {
-    const cubes = subgame.split(",");
+    const cubes = subgame.split(",")
     for (let cube of cubes) {
-      const [count, color] = cube.trim().split(" ");
+      const [count, color] = cube.trim().split(" ")
       if (validCubeCount[color] < count) {
-        return false;
+        return false
+        break
       }
     }
   }
   return true;
 }
 
-const lines = input.split("\n");
-
-for (let index = 0; index < lines.length; index++) {
-  if (isGamePossible(lines[index])) {
-    console.log(`Game ${index + 1} is possible`);
-    validGamesSum += (index + 1);
+for (let index = 0; index < games.length; index++) {
+  if (isGamePossible(games[index])) {
+    console.log(`Game ${index + 1} is possible`)
+    validGamesSum += (index + 1)
   }
 }
-
 
 console.log(`Sum of IDs of valid games: ${validGamesSum}`)
