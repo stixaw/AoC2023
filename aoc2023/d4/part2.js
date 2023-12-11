@@ -8,7 +8,7 @@ Process all of the original and copied scratchcards until no more scratchcards a
 Including the original set of scratchcards, how many total scratchcards do you end up with?
 */
 
-import input from "./example1.js"
+import input from "./input.js"
 
 const cards = input.split("\n").map((x) => x.replace(/  /g, " 0"))
 
@@ -29,9 +29,24 @@ for (let i = 0; i < cards.length; i++) {
     }
   }
 
-  winningCards.push({ card: i, matches: points, copies: 1, processed: false }) // use index instead of card name
+  winningCards.push({ card: i, matches: points, copies: 1, }) // use index instead of card name
   totalPoints += points > 0 ? Math.pow(2, matches.length - 1) : 0
 }
 
 console.log(`Total points: ${totalPoints}`)
-console.log("Winning cards: ", winningCards)
+
+for (let cardIndex = 0; cardIndex < winningCards.length; cardIndex++) {
+  let card = winningCards[cardIndex];
+  for (let copyNum = 0; copyNum < card.copies; copyNum++) {
+    for (let matchNum = 0; matchNum < card.matches; matchNum++) {
+      let nextCard = winningCards[cardIndex + matchNum + 1]
+
+      nextCard.copies += 1
+
+    }
+  }
+}
+
+console.log(winningCards.reduce((total, card) =>
+  card.copies + total
+  , 0))
