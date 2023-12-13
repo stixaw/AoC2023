@@ -1,4 +1,4 @@
-import input from "./example1.js"
+import input from "./input.js"
 
 
 /* Description: toy boat race
@@ -18,4 +18,32 @@ if you multiply these values together, you get 288 (4 * 8 * 9).
 
 Determine the number of ways you could beat the record in each race. What do you get if you multiply these numbers together?
 */
+const raceData = input.split("\n")
 
+function waysToWin() {
+  let totalWaysToWin = 1
+  let times = []
+  let recordDistance = []
+  let pattern = /(\d+)/g
+  let match
+
+  while (match = pattern.exec(raceData[0])) {
+    times.push(parseInt(match[0]))
+  }
+
+  while (match = pattern.exec(raceData[1])) {
+    recordDistance.push(parseInt(match[0]))
+  }
+
+  for (let timeNum = 0; timeNum < times.length; timeNum++) {
+    let waysToWin = 0
+    for (let buttonLength = 0; buttonLength < times[timeNum]; buttonLength++) {
+      if ((times[timeNum] - buttonLength) * buttonLength > recordDistance[timeNum]) {
+        waysToWin++
+      }
+    }
+    totalWaysToWin *= waysToWin
+  }
+  return totalWaysToWin
+}
+console.log(`Ways to Win part 1: ${waysToWin()}`)
