@@ -25,10 +25,10 @@ const hands = gameData.map(handStr => {
     hand, bet: parseInt(bet), handStrength: getHandStrength(hand)
   }
 })
-console.log(hands)
+// console.log(hands)
 
-// sortHandStrength(hands)
-// console.log(getWinnings(hands))
+sortHandStrength(hands)
+console.log(getWinnings(hands))
 
 //everything below here is a helper function
 function getHandStrength(handStr) {
@@ -52,23 +52,26 @@ function getHandStrength(handStr) {
   for (const card of cards) {
     cardCounts[card] = cardCounts[card] ? cardCounts[card] + 1 : 1
   }
-  console.log('cardCounts', cardCounts)
-  const sortedByValues = Object.keys(cardCounts)
-    .sort((a, b) => {
-      // Compare counts first
-      const countComparison = cardCounts[b] - cardCounts[a];
-      if (countComparison !== 0) return countComparison;
+  console.log('Original cardCounts', cardCounts)
 
-      // If counts are equal, compare card values
-      return cardValues[b] - cardValues[a];
-    });
 
-  console.log('Sorted Values', sortedByValues)
+  if (cardCounts.J && cardCounts.J === 5) {
+    cardCounts.A = cardCounts.J;
+    delete cardCounts.J;
+    handStr = handStr.replace(/J/g, 'A')
+  }
+  console.log('newCardCounts', cardCounts)
+  console.log("New Hands", handStr)
 
-  // now to convert J to the Highest Value card with the highest count based on the sortedValues
-  // if cardCounts highest card and highest sortedByValues is J convert to A
+  // if (!cardCounts.J) {
+  //   // go over the keys of cardCounts if not a j return it. 
+  //   // then determine the possible hands based on the returned cards
+  //   let newCardCounts = 
+
+  // }
 
   const countArray = Object.values(cardCounts).sort((a, b) => b - a)
+  console.log(countArray)
 
   for (const cardCount of countArray) {
     if (cardCount === 5) {
