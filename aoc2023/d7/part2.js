@@ -33,7 +33,6 @@ const scoreOrder = { A: 14, K: 13, Q: 12, J: 11, T: 10 }
 const cardScoreValue = {
   A: 14, K: 13, Q: 12, T: 10, 9: 9, 8: 8, 7: 7, 6: 6, 5: 5, 4: 4, 3: 3, 2: 2, J: 0
 }
-
 const gameData = input.split("\n")
 const hands = gameData.map(handStr => {
   const [hand, bet] = handStr.split(" ")
@@ -57,8 +56,17 @@ function getCardCounts(handStr) {
   return cardCounts;
 }
 
+function getPossibleHands(cardCounts) {
+  let possibleHands = []
+
+  // for J in 
+
+}
+
 function getHandStrengthFromCounts(cardCounts) {
+  console.log("card counts", cardCounts)
   const countArray = Object.values(cardCounts).sort((a, b) => b - a);
+  console.log("Sorted Card Array", countArray)
 
   for (const cardCount of countArray) {
     if (cardCount === 5) {
