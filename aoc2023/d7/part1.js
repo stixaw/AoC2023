@@ -31,37 +31,41 @@ console.log(getWinnings(hands))
 
 //======================================================
 //everything below here is a helper function
-function getHandStrength(handStr) {
-  //keeping order from left to right
-  const cards = handStr.split("")
-  const cardCounts = {}
+function getCardCounts(handStr) {
+  const cards = handStr.split("");
+  const cardCounts = {};
 
   for (const card of cards) {
-    cardCounts[card] = cardCounts[card] ? cardCounts[card] + 1 : 1
+    cardCounts[card] = cardCounts[card] ? cardCounts[card] + 1 : 1;
   }
-  const countArray = Object.values(cardCounts).sort((a, b) => b - a)
+
+  return cardCounts;
+}
+
+function getHandStrengthFromCounts(cardCounts) {
+  const countArray = Object.values(cardCounts).sort((a, b) => b - a);
 
   for (const cardCount of countArray) {
     if (cardCount === 5) {
-      return handStrength["Five of a kind"]
+      return handStrength["Five of a kind"];
     }
     if (cardCount === 4) {
-      return handStrength["Four of a kind"]
+      return handStrength["Four of a kind"];
     }
     if (cardCount === 3) {
       if (Object.keys(cardCounts).length === 2) {
-        return handStrength["Full house"]
+        return handStrength["Full house"];
       }
-      return handStrength["Three of a kind"]
+      return handStrength["Three of a kind"];
     }
     if (cardCount === 2) {
       if (Object.keys(cardCounts).length === 3) {
-        return handStrength["Two pair"]
+        return handStrength["Two pair"];
       }
-      return handStrength["One pair"]
+      return handStrength["One pair"];
     }
   }
-  return handStrength["High card"]
+  return handStrength["High card"];
 }
 
 function sortHandStrength(hands) {
@@ -88,6 +92,11 @@ function sortHandStrength(hands) {
       }
     }
   })
+}
+
+function getHandStrength(handStr) {
+  const cardCounts = getCardCounts(handStr);
+  return getHandStrengthFromCounts(cardCounts);
 }
 
 function getWinnings(hands) {

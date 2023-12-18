@@ -18,6 +18,22 @@ import input from "./example2.js"
  * total winnings = 5905
  */
 
+const handStrength = {
+  "Five of a kind": 7,
+  "Four of a kind": 6,
+  "Full house": 5,
+  "Three of a kind": 4,
+  "Two pair": 3,
+  "One pair": 2,
+  "High card": 1
+}
+
+const scoreOrder = { A: 14, K: 13, Q: 12, J: 11, T: 10 }
+
+const cardScoreValue = {
+  A: 14, K: 13, Q: 12, T: 10, 9: 9, 8: 8, 7: 7, 6: 6, 5: 5, 4: 4, 3: 3, 2: 2, J: 0
+}
+
 const gameData = input.split("\n")
 const hands = gameData.map(handStr => {
   const [hand, bet] = handStr.split(" ")
@@ -25,75 +41,46 @@ const hands = gameData.map(handStr => {
     hand, bet: parseInt(bet), handStrength: getHandStrength(hand)
   }
 })
-// console.log(hands)
-
+console.log("starting Hands", hands)
 sortHandStrength(hands)
 console.log(getWinnings(hands))
 
 //everything below here is a helper function
-function getHandStrength(handStr) {
-  //keeping order from left to right
-  const handStrength = {
-    "Five of a kind": 7,
-    "Four of a kind": 6,
-    "Full house": 5,
-    "Three of a kind": 4,
-    "Two pair": 3,
-    "One pair": 2,
-    "High card": 1
-  }
-
-  const cardValues = {
-    A: 14, K: 13, Q: 12, T: 10, 9: 9, 8: 8, 7: 7, 6: 6, 5: 5, 4: 4, 3: 3, 2: 2, J: 0
-  }
-  const cards = handStr.split("")
-  const cardCounts = {}
+function getCardCounts(handStr) {
+  const cards = handStr.split("");
+  const cardCounts = {};
 
   for (const card of cards) {
-    cardCounts[card] = cardCounts[card] ? cardCounts[card] + 1 : 1
+    cardCounts[card] = cardCounts[card] ? cardCounts[card] + 1 : 1;
   }
-  console.log('Original cardCounts', cardCounts)
 
+  return cardCounts;
+}
 
-  if (cardCounts.J && cardCounts.J === 5) {
-    cardCounts.A = cardCounts.J;
-    delete cardCounts.J;
-    handStr = handStr.replace(/J/g, 'A')
-  }
-  console.log('newCardCounts', cardCounts)
-  console.log("New Hands", handStr)
-
-  // if (!cardCounts.J) {
-  //   // go over the keys of cardCounts if not a j return it. 
-  //   // then determine the possible hands based on the returned cards
-  //   let newCardCounts = 
-
-  // }
-
-  const countArray = Object.values(cardCounts).sort((a, b) => b - a)
-  console.log(countArray)
+function getHandStrengthFromCounts(cardCounts) {
+  const countArray = Object.values(cardCounts).sort((a, b) => b - a);
 
   for (const cardCount of countArray) {
     if (cardCount === 5) {
-      return handStrength["Five of a kind"]
+      return handStrength["Five of a kind"];
     }
     if (cardCount === 4) {
-      return handStrength["Four of a kind"]
+      return handStrength["Four of a kind"];
     }
     if (cardCount === 3) {
       if (Object.keys(cardCounts).length === 2) {
-        return handStrength["Full house"]
+        return handStrength["Full house"];
       }
-      return handStrength["Three of a kind"]
+      return handStrength["Three of a kind"];
     }
     if (cardCount === 2) {
       if (Object.keys(cardCounts).length === 3) {
-        return handStrength["Two pair"]
+        return handStrength["Two pair"];
       }
-      return handStrength["One pair"]
+      return handStrength["One pair"];
     }
   }
-  return handStrength["High card"]
+  return handStrength["High card"];
 }
 
 function sortHandStrength(hands) {
@@ -106,7 +93,6 @@ function sortHandStrength(hands) {
     }
     // sort by card strength for hands with the same strength
     if (a.handStrength === b.handStrength) {
-      const scoreOrder = { A: 14, K: 13, Q: 12, T: 10 }
       for (let i = 0; i < a.hand.length; i++) {
         let aCard = scoreOrder[a.hand[i]] || +a.hand[i]
         let bCard = scoreOrder[b.hand[i]] || +b.hand[i]
@@ -120,6 +106,11 @@ function sortHandStrength(hands) {
       }
     }
   })
+}
+
+function getHandStrength(handStr) {
+  const cardCounts = getCardCounts(handStr);
+  return getHandStrengthFromCounts(cardCounts);
 }
 
 function getWinnings(hands) {
