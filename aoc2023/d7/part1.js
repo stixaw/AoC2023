@@ -1,4 +1,4 @@
-import input from "./input.js"
+import input from "./example2.js"
 /**
  * 32T3K is the only one pair and the other hands are all a stronger type, so it gets rank 1.
  * KK677 and KTJJT are both two pair. Their first cards both have the same label, but the second card of KK677 is stronger (K vs T), so KTJJT gets rank 2 and KK677 gets rank 3.
@@ -7,26 +7,32 @@ Now, you can determine the total winnings of this set of hands by adding up the 
 (765 * 1 + 220 * 2 + 28 * 3 + 684 * 4 + 483 * 5). So the total winnings in this example are 6440.
 */
 
+const handStrength = {
+  "Five of a kind": 7,
+  "Four of a kind": 6,
+  "Full house": 5,
+  "Three of a kind": 4,
+  "Two pair": 3,
+  "One pair": 2,
+  "High card": 1
+}
+
+const scoreOrder = { A: 14, K: 13, Q: 12, J: 11, T: 10 }
+
 const gameData = input.split("\n")
 const hands = gameData.map(handStr => {
   const [hand, bet] = handStr.split(" ")
   return { hand, bet: parseInt(bet), handStrength: getHandStrength(hand) }
 })
+console.log("Hands with strength Object", hands)
 sortHandStrength(hands)
 console.log(getWinnings(hands))
 
+
+//======================================================
 //everything below here is a helper function
 function getHandStrength(handStr) {
   //keeping order from left to right
-  const handStrength = {
-    "Five of a kind": 7,
-    "Four of a kind": 6,
-    "Full house": 5,
-    "Three of a kind": 4,
-    "Two pair": 3,
-    "One pair": 2,
-    "High card": 1
-  }
   const cards = handStr.split("")
   const cardCounts = {}
 
@@ -68,7 +74,7 @@ function sortHandStrength(hands) {
     }
     // sort by card strength for hands with the same strength
     if (a.handStrength === b.handStrength) {
-      const scoreOrder = { A: 14, K: 13, Q: 12, J: 11, T: 10 }
+
       for (let i = 0; i < a.hand.length; i++) {
         let aCard = scoreOrder[a.hand[i]] || +a.hand[i]
         let bCard = scoreOrder[b.hand[i]] || +b.hand[i]
