@@ -1,4 +1,4 @@
-import input from "./example2.js"
+import input from "./input.js"
 
 /**
  *  J = Joker and its is a wildcard which can be any card
@@ -28,16 +28,13 @@ const handStrength = {
   "High card": 1
 }
 
-const scoreOrder = { A: 14, K: 13, Q: 12, J: 11, T: 10 }
+const scoreOrder = { A: 14, K: 13, Q: 12, J: 1, T: 10 }
 
-const cardScoreValue = {
-  A: 14, K: 13, Q: 12, T: 10, 9: 9, 8: 8, 7: 7, 6: 6, 5: 5, 4: 4, 3: 3, 2: 2, J: 0
-}
 const gameData = input.split("\n")
 const hands = gameData.map(handStr => {
   const [hand, bet] = handStr.split(" ")
   return {
-    hand, bet: parseInt(bet), handStrength: getHandStrength(hand)
+    hand, bet: parseInt(bet), handStrength: getPossibleHands(hand)
   }
 })
 console.log("starting Hands", hands)
@@ -56,37 +53,27 @@ function getCardCounts(handStr) {
   return cardCounts;
 }
 
-function getPossibleHands(cardCounts) {
-  let possibleHands = []
-
-  // for J in 
-
-}
-
 function getHandStrengthFromCounts(cardCounts) {
-  console.log("card counts", cardCounts)
-  const countArray = Object.values(cardCounts).sort((a, b) => b - a);
-  console.log("Sorted Card Array", countArray)
 
-  for (const cardCount of countArray) {
-    if (cardCount === 5) {
-      return handStrength["Five of a kind"];
-    }
-    if (cardCount === 4) {
-      return handStrength["Four of a kind"];
-    }
-    if (cardCount === 3) {
-      if (Object.keys(cardCounts).length === 2) {
-        return handStrength["Full house"];
-      }
-      return handStrength["Three of a kind"];
-    }
-    if (cardCount === 2) {
-      if (Object.keys(cardCounts).length === 3) {
-        return handStrength["Two pair"];
-      }
-      return handStrength["One pair"];
-    }
+  const countArray = Object.values(cardCounts);
+
+  if (countArray.length === 1) {
+    return handStrength["Five of a kind"];
+  }
+  if (countArray.includes(4)) {
+    return handStrength["Four of a kind"];
+  }
+  if (countArray.length === 2) {
+    return handStrength["Full house"];
+  }
+  if (countArray.includes(3)) {
+    return handStrength["Three of a kind"];
+  }
+  if (countArray.length === 3) {
+    return handStrength["Two pair"];
+  }
+  if (countArray.length === 4) {
+    return handStrength["One pair"];
   }
   return handStrength["High card"];
 }
@@ -116,10 +103,27 @@ function sortHandStrength(hands) {
   })
 }
 
-function getHandStrength(handStr) {
-  const cardCounts = getCardCounts(handStr);
-  return getHandStrengthFromCounts(cardCounts);
+function getPossibleHands(handStr) {
+  let possibleHands = []
+  const cards = ['A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
+  if (handStr.includes('J')) {
+    for (const card of cards) {
+      const newHandStr = handStr.replaceAll('J', card);
+      const cardCounts = getCardCounts(newHandStr);
+      const handStrength = getHandStrengthFromCounts(cardCounts);
+      possibleHands.push(handStrength);
+    }
+  } else {
+    const cardCounts = getCardCounts(handStr);
+    const handStrength = getHandStrengthFromCounts(cardCounts);
+    possibleHands.push(handStrength);
+  }
+  possibleHands.sort((a, b) => b - a);
+
+  return possibleHands[0]; // return the hand with the highest strength
 }
+
+
 
 function getWinnings(hands) {
   return hands.reduce((totalValue, hand, i) => {
