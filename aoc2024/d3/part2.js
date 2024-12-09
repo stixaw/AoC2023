@@ -1,7 +1,7 @@
 import fs from 'fs'
  
-const input = fs.readFileSync('./example2.txt', 'utf8')
-// const input = fs.readFileSync('./input.txt', 'utf8')
+// const input = fs.readFileSync('./example2.txt', 'utf8')
+const input = fs.readFileSync('./input.txt', 'utf8')
 
 /**
  *There are two new instructions you'll need to handle:
@@ -22,16 +22,27 @@ This time, the sum of the results is 48 (2*4 + 8*5).
 
 const regExPattern = /mul\(\d{1,3},\d{1,3}\)/g
 
-const cleanInput = input.match(regExPattern)
+const regExPattern2 = /mul\(\d{1,3},\d{1,3}\)|do\(\)|don't\(\)/g
+
+const cleanInput = input.match(regExPattern2)
 console.log(`cleanInput: `, cleanInput)
+
+let isDo = true
 
 let sum = 0
 
-// for (let i = 0; i < cleanInput.length; i++) {
-//   const [left, right] = cleanInput[i].match(/\d{1,3}/g)
-//   sum += left * right
-// }
+for (let i = 0; i < cleanInput.length; i++) {
+  if (cleanInput[i].includes('do()')) {
+    isDo = true
+  } else if (cleanInput[i].includes('don\'t()')) {
+    isDo = false
+  } else if (isDo) {
+    const [left, right] = cleanInput[i].match(/\d{1,3}/g)
+    sum += left * right
+  }
+
+}
 
 
 
-// console.log(`Sum: `, sum)
+console.log(`Sum: `, sum)
