@@ -2,7 +2,7 @@
     "type": "module",
     "dependencies": {
         "fs": "^0.0.1-security",
-        "nodemon": "^2.0.20"
+        "nodemon": "^3.1.11"
     },
     "scripts": {
         "start": "nodemon"
